@@ -8,11 +8,16 @@
 %% paths
 addpath('C:\BN_ASSATEAGUE\bayesTools')
 addpath('C:\BN_ASSATEAGUE\interpTools')
-%% Bayes
-%netName = 'groundwater_v3d.neta'
-netName = 'groundwater_v3dEM.neta' % EM train
+%% Bayes and filenames
+netName = 'SLR.neta' % EM train
+cas_dat_root = 'All_SLR'; % root for either cas file or dat file
 [netstuff] = netInfo(netName)
 nodeNames = cellstr(char(netstuff.name))
+% if there's not already a .dat file coresponding to the .cas file, make
+% one
+if ~exist([cas_dat_root,'.dat'],'file')
+    cas2dat(cas_dat_root);
+end %if
 
 
 %% get data
@@ -31,7 +36,7 @@ switch netNameF
     case {'groundwater_v3d','groundwater_v3dEM'}
         allTestCases = {
             'updateZWT_checkZWT'       {'zwatertable','xwatertable','dwatertable'}  {'zwatertable','xwatertable','dwatertable'}
-            'updateAll_predZWT'       {'islandwidth'   'islandelev' 'recharge'} {'zwatertable','xwatertable','dwatertable'}
+            'updateAll_predZWT'       {'islandwidtflh'   'islandelev' 'recharge'} {'zwatertable','xwatertable','dwatertable'}
             }
     %add cases if we need to treat different nets (differnt variables) differently    
  end
