@@ -1,0 +1,49 @@
+From:	Nathaniel Plant [nplant@usgs.gov]
+Sent:	Tuesday, October 28, 2008 10:13 AM
+To:	'Kara Doran'; 'Katherine A Serafin'
+Subject:	Netica 64-bit working!
+Here are some instructions that should get netica's 64-bit DLLs working on your machines.
+This will allow you to start matlab ANYWHERE and run the netica stuff ANYWHERE.
+The problem was matlab, which would not add dlls and libs to long paths and windows needed to know where the dlls were too.
+
+At your convenience, please do the following and let me know if it works.  Requires REBOOT as well as exiting matlab. Please make sure to comment out other netica references in librarypath and classpath.  
+
+% CREATE a local neticabin directory
+mkdir C:\neticabin64b
+% COPY following files to your local drive from
+% \\stplidar01\processed1\programs\matlab_programs\bayesTools\NeticaJ408_64bit\
+Netica.dll
+NeticaJ.lib                   
+NeticaJ.dll
+NeticaJ.jar
+
+% include in classpath.txt
+C:\neticabin64b
+C:\neticabin64b\NeticaJ.jar
+% include in librarypath.txt
+C:\neticabin64b
+% include in windows system environment variable PATH (append to path, preceed with ;)
+C:\neticabin64b;
+
+% REBOOT COMPUTER (matlab also restarts)
+
+% test
+import norsys.netica.*;
+env = Environ.getDefaultEnviron;
+env = Environ('+PlantN/USGS/120-4/12690');
+% ok?
+env.finalize
+
+
+
+---
+Nathaniel Plant
+USGS Florida Integrated Science Center
+600 4th St. S.
+St. Petersburg FL 33701
+office #258
+phone: 727-803-8747-x3072
+fax: 727-803-2032
+email: nplant@usgs.gov
+web: http://coastal.er.usgs.gov/hurricanes/
+---
