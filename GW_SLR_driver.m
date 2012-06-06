@@ -9,21 +9,27 @@
 addpath('C:\BN_ASSATEAGUE\bayesTools')
 addpath('C:\BN_ASSATEAGUE\interpTools')
 %% Bayes and filenames
-netName = 'SLR.neta' % EM train
-cas_dat_root = 'All_SLR'; % root for either cas file or dat file
-[netstuff] = netInfo(netName)
-nodeNames = cellstr(char(netstuff.name))
+netRoot = 'SLR00_EM10';
+netName = [netRoot,'.neta'];
+cas_dat_root = 'SEAWAT2NETICA_SLR_00'; % root for either cas file or dat file
+[netstuff] = netInfo(netName);
+nodeNames = cellstr(char(netstuff.name));
 % if there's not already a .dat file coresponding to the .cas file, make
 % one
 if ~exist([cas_dat_root,'.dat'],'file')
     cas2dat(cas_dat_root);
 end %if
 
+%% make a directory for figures if there isn't one yet
+figdir = [cas_dat_root,'_figures']
+if ~exist(figdir,'dir')
+    mkdir(figdir);
+end % if
 
 %% get data
-data = load('SEAWAT2NETICA+dwt.dat'); % RECHARGE fixed, added depth to water table
-dataNames = {'modelrow'   'islandwidth'   'islandelev'   'zwatertable'      'recharge'       'xwatertable'       'westindex'   'eastindex'  'maxWTCol' 'dwatertable'  'maxDTW'
-}
+data = load([cas_dat_root,'.dat']); % THESE NAMES MUST BE IN THE ORDER OF THE COLUMNS
+%dataNames = { 'islandwidth' 'islandelev' 'maxWT' 'mean_rch' 'max_WT_loc' 'mean_DTW' 'max_DTW'}
+dataNames = { 'model_row' 'islandwidth' 'islandelev' 'maxWT' 'mean_rch' 'max_WT_loc' 'west_index' 'east_index' 'max_WT_col' 'mean_DTW' 'max_DTW'}
 N = length(data)
 
 % set this to select data
@@ -33,10 +39,10 @@ did = 1:1:N; % decimate data to test things
 %%  define cases
 [netNameD,netNameF]=fileparts(netName)
 switch netNameF
-    case {'groundwater_v3d','groundwater_v3dEM'}
+    case {netRoot}
         allTestCases = {
-            'updateZWT_checkZWT'       {'zwatertable','xwatertable','dwatertable'}  {'zwatertable','xwatertable','dwatertable'}
-            'updateAll_predZWT'       {'islandwidtflh'   'islandelev' 'recharge'} {'zwatertable','xwatertable','dwatertable'}
+            'updateWT_checkWT'      {'maxWT','mean_DTW'}  {'maxWT','mean_DTW'}
+            'updateAll_predWT'       {'islandwidth'   'islandelev' 'mean_rch'} {'maxWT','mean_DTW'}
             }
     %add cases if we need to treat different nets (differnt variables) differently    
  end
@@ -104,7 +110,7 @@ for i=1:1:length(allTestCases(:,1))
     nodeNamesOut = allTestCases{i,3}
     
     %% run
-    if(exist('dataError'))
+    if(exist('dataError','var'))
         %  if data have errors:
         fprintf('using data errors\n');
         testcasename=[testcasename,'_useErr'];
@@ -183,8 +189,8 @@ for i=1:1:length(allTestCases(:,1))
         xlabel([VARNAME, ' predicted'], 'interpreter','none')
         ylabel([VARNAME, ' observed'], 'interpreter','none')
         title(sprintf('skill=%.2f, meane=%.2f, rmse=%.2f, LR=%.0f', skM,meaneM,rmseM,LR))
-        print('-dpng', ['prediction_',VARNAME,' - ',testcasename,'-',netNamePrint,'.png'])
-        hgsave(['prediction_',VARNAME,' - ',testcasename,'-',netNamePrint,'.fig'])
+        print('-dpng', [figdir,'\prediction_',VARNAME,' - ',testcasename,'-',netNamePrint,'.png'])
+        hgsave([figdir,'\prediction_',VARNAME,' - ',testcasename,'-',netNamePrint,'.fig'])
     end
     % close all
 end
