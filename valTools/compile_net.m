@@ -8,7 +8,7 @@ function compile_net(NetName,newCaseFilename,voodooPar,outfilename)
 %       newCaseFilename --> new case file including '.cas' extension
 %       voodoPar --> the voodoo tuning parameter for building CPTs
 %       outfilename --> netica file for newly build net (including '.neta'
-global NETICA_ENV NETICA_NET
+global NETICA_ENV NETICA_NET NETICA_NETNAME NETICA_NODESTRUCT NETICA_STREAMER NETICA_ALL_NODES
 % import netica stuff
 import norsys.netica.*;
 
@@ -44,4 +44,4 @@ NETICA_NET.write(Streamer(outfilename));
 NETICA_NET.finalize
 NETICA_ENV.finalize
 
-disp('all done!')
+disp('New Net created by compile_net()')
