@@ -8,6 +8,8 @@
 %% paths
 addpath('C:\BN_ASSATEAGUE\bayesTools')
 addpath('C:\BN_ASSATEAGUE\interpTools')
+addpath('C:\BN_ASSATEAGUE\valTools')
+
 %% Bayes and filenames
 netRoot = 'SLR00_EM10';
 netName = [netRoot,'.neta'];

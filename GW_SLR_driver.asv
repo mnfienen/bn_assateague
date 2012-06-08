@@ -8,10 +8,12 @@
 %% paths
 addpath('C:\BN_ASSATEAGUE\bayesTools')
 addpath('C:\BN_ASSATEAGUE\interpTools')
+addpath('C:\BN_ASSATEAGUE\valTools')
+
 %% Bayes and filenames
-netRoot = 'SLR';
+netRoot = 'SLR00_EM10';
 netName = [netRoot,'.neta'];
-cas_dat_root = 'All_SLR'; % root for either cas file or dat file
+cas_dat_root = 'SEAWAT2NETICA_SLR_00'; % root for either cas file or dat file
 [netstuff] = netInfo(netName);
 nodeNames = cellstr(char(netstuff.name));
 % if there's not already a .dat file coresponding to the .cas file, make
@@ -27,13 +29,9 @@ if ~exist(figdir,'dir')
 end % if
 
 %% get data
-data = load([cas_dat_root,'.dat']); % RECHARGE fixed, added depth to water table
-dataNames = {    'islandelev'
-    'islandwidth'
-    'mean_rch'
-    'maxWT'
-    'mean_DTW'
-}
+data = load([cas_dat_root,'.dat']); % THESE NAMES MUST BE IN THE ORDER OF THE COLUMNS
+%dataNames = { 'islandwidth' 'islandelev' 'maxWT' 'mean_rch' 'max_WT_loc' 'mean_DTW' 'max_DTW'}
+dataNames = { 'model_row' 'islandwidth' 'islandelev' 'maxWT' 'mean_rch' 'max_WT_loc' 'west_index' 'east_index' 'max_WT_col' 'mean_DTW' 'max_DTW'}
 N = length(data)
 
 % set this to select data
@@ -43,10 +41,10 @@ did = 1:1:N; % decimate data to test things
 %%  define cases
 [netNameD,netNameF]=fileparts(netName)
 switch netNameF
-    case {netName}
+    case {netRoot}
         allTestCases = {
-            'updateZWT_checkZWT'      {'maxWT','mean_DTW'}  {'maxWT','mean_DTW'}
-            'updateAll_predZWT'       {'islandwidth'   'islandelev' 'mean_rch'} {'maxWT','mean_DTW'}
+            'updateWT_checkWT'      {'maxWT','mean_DTW'}  {'maxWT','mean_DTW'}
+            'updateAll_predWT'       {'islandwidth'   'islandelev' 'mean_rch'} {'maxWT','mean_DTW'}
             }
     %add cases if we need to treat different nets (differnt variables) differently    
  end
