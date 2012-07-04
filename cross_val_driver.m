@@ -1,6 +1,6 @@
 % CROSS VALIDATION DRIVER
 
-function [skillz,savedStats] = cross_val_driver(baseNetname,voodooPar,baseCASEfilename,nFolds)
+function cross_val_driver(baseNetname,voodooPar,baseCASEfilename,nFolds)
 % skillz = K_fold_CV_driver(baseNETname,voodooPar,baseCASEfilename,nFolds) 
 % a m!ke@usgs joint
 % 
@@ -23,8 +23,9 @@ function [skillz,savedStats] = cross_val_driver(baseNetname,voodooPar,baseCASEfi
 %             dataset into
 %
 % OUTPUT:
-%       skillz --> a MATLAB structure with skill values for both training
-%       sets and for validation (left out) sets as well as some metadata
+%       savedStats --> a MATLAB structure with skill values for both training
+%       sets and for validation (left out) sets as well as some metadata.
+%       Saved to .mat files
 %% make the netica stuff global --> kinda kludgy but required...
 global NETICA_ENV NETICA_NET NETICA_NETNAME NETICA_NODESTRUCT NETICA_STREAMER NETICA_ALL_NODES
 
@@ -71,17 +72,28 @@ did = 1:1:N; % decimate data to test things --> if 1:1:N; all is analyzed at onc
 allfolds = k_fold_maker(N,nFolds);
 
 %% initalize the output structure
-numforstr = length(allTestCases(:,1))*nFolds + 1;
-skillz = struct('valskill',num2cell(zeros(numforstr,1)), ...
-                'calskill',num2cell(zeros(numforstr,1)), ...
-                'casname', repmat({''},numforstr,1), ...
-                'netaname',repmat({''},numforstr,1), ...
-                'K',num2cell(zeros(numforstr,1)) ...
-                );
 savedStats = struct; % store results
 
-
-
+%% calculate skill, etc. for the entire data set priot to cross-validation
+    for ctcase = 1:length(allTestCases(:,1))
+    % get run parameters
+        testcasename = allTestCases{ctcase,1}; % string
+        NodeNamesIn = allTestCases{ctcase,2}; % cell
+        NodeNamesOut = allTestCases{ctcase,3};
+        [ALLpred,ALLDataIn, ALLDataOut, ALLbh] = runPredictBayesMNF(baseNetname, ...
+            NodeNamesIn, NodeNamesOut, data, dataNames, ['ALL', testcasename]);
+        close (ALLbh);
+        
+        savedStats.casname = cas_dat_root;
+        savedStats.netaname = baseNetname;
+        
+        savedStats.ALLsavedStats =  PredictBayesPostProc(baseNetname, NodeNamesOut, ALLpred, dataNames, ...
+                data,  figdir,['ALL', testcasename]);
+        currfilename = [cas_dat_root, '_ct-', num2str(ctcase), '_NO_CV.mat'];
+        save(currfilename,'savedStats');
+        savedStats = struct; % store results
+    end %ctcase
+    
 %% loop over the folds to calculate skillz
 for cfold = 1:nFolds
        close('all');
@@ -91,10 +103,8 @@ for cfold = 1:nFolds
     data_cal = data(allfolds(cfold).retained,:);
     data_val = data(allfolds(cfold).leftout,:);
     cfold_cas_calib_file = [cas_dat_root, '_', num2str(cfold), '.cas'];
-    skillz(cfold).casname = cfold_cas_calib_file;
     ofp = fopen(cfold_cas_calib_file,'w');
     CurrFoldNet = [baseNetname(1:end-5), '_', num2str(cfold), '.neta'];
-    skillz(cfold).netaname = CurrFoldNet;
 
     % Write out the cas file
     for i = 1:length(dataNames)
@@ -109,9 +119,13 @@ for cfold = 1:nFolds
     
     % now compile and relearn the net with the current fold's casefile
     compile_net(baseNetname,cfold_cas_calib_file,voodooPar,CurrFoldNet)
-       
+
+    
 %% Next, calculate skills for both training and validation data
-    for ctcase = 1:length(allTestCases(:,1))
+        savedStats.casname = cfold_cas_calib_file;
+        savedStats.netaname = CurrFoldNet;
+
+for ctcase = 1:length(allTestCases(:,1))
     % get run parameters
         testcasename = allTestCases{ctcase,1}; % string
         NodeNamesIn = allTestCases{ctcase,2}; % cell
@@ -123,7 +137,7 @@ for cfold = 1:nFolds
             NodeNamesIn, NodeNamesOut, data_val, dataNames, ['val', testcasename]);
         close (valbh);
 
-        savedStats(cfold).valsavedStats =  PredictBayesPostProc(CurrFoldNet, NodeNamesOut, valpred, dataNames, ...
+        savedStats.valsavedStats =  PredictBayesPostProc(CurrFoldNet, NodeNamesOut, valpred, dataNames, ...
                 data_val,  figdir,['val', testcasename]);
         
         
@@ -132,8 +146,13 @@ for cfold = 1:nFolds
             NodeNamesIn, NodeNamesOut, data_cal, dataNames, ['cal', testcasename]);
         close (calbh);
 
-        savedStats(cfold).calsavedStats =  PredictBayesPostProc(CurrFoldNet, NodeNamesOut, calpred, dataNames, ...
+        savedStats.calsavedStats =  PredictBayesPostProc(CurrFoldNet, NodeNamesOut, calpred, dataNames, ...
                 data_cal,  figdir,['val', testcasename]);
+            
+        % dump out the saved stats to disk
+        currfilename = [cfold_cas_calib_file(1:end-4), '_fold-', num2str(cfold) '_ct-', num2str(ctcase), '.mat'];
+        save(currfilename,'savedStats');
+        savedStats = struct;
     end %for ctcase
     
     

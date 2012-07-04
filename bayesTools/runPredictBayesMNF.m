@@ -101,24 +101,24 @@ for j = 1:length(nodeNamesOut)
     colorbar
     
     % save
-    try
+    %try
         % case where permisions are fouled up
-        savename = [netRoot,'[',nodeNamesOut{j},']_LR=',num2str(round(nansum(likelihoodRatio))),'_',testcasename,'.',num2str(fix(now)),'.fig'];
-        hgsave(savename)
-        savename = [netRoot,'[',nodeNamesOut{j},']_LR=',num2str(round(nansum(likelihoodRatio))),'_',testcasename,'.',num2str(fix(now)),'.png'];
-        print('-dpng', savename)
-    catch
-        warning('file save %s failed', savename)
-    end
+        %savename = [netRoot,'[',nodeNamesOut{j},']_LR=',num2str(round(nansum(likelihoodRatio))),'_',testcasename,'.',num2str(fix(now)),'.fig'];
+        %hgsave(savename)
+     %   savename = [netRoot,'[',nodeNamesOut{j},']_LR=',num2str(round(nansum(likelihoodRatio))),'_',testcasename,'.',num2str(fix(now)),'.png'];
+    %    print('-dpng', savename)
+   % catch
+  %      warning('file save %s failed', savename)
+ %   end
     
 end
 
 % save data
-try
+%try
     % case where permisions are fouled up
-    savename = [netRoot,'_LR=',num2str(round(nansum(likelihoodRatio))),'_',testcasename,'.',num2str(fix(now)),'.mat']
-    save(savename)
-catch
-    warning('file save %s failed', savename)
-end
+    %savename = [netRoot,'_LR=',num2str(round(nansum(likelihoodRatio))),'_',testcasename,'.',num2str(fix(now)),'.mat']
+    %save(savename)
+%catch
+    %warning('file save %s failed', savename)
+%end
 

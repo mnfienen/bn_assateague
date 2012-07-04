@@ -6,7 +6,7 @@ import norsys.netica.*;
 % make the netica stuff global --> kinda kludgy but required...
 global NETICA_ENV NETICA_NET
     VARNAMES = nodeNamesOut
-    cnt = 1;
+    cnt = 0;
     N = length(data);
     did = 1:1:N;
     for j=1:length(VARNAMES)
