@@ -1,4 +1,4 @@
-function pred = predictBayes_v2dev(netName, nodeNamesIn, nodeNamesOut, dataIn, dataOut, dataInErr)
+function pred = predictBayes_v2devMNF(netName, nodeNamesIn, nodeNamesOut, dataIn, dataOut, dataInErr)
 % pred = predictBayes(netName, nodeNamesIn, nodeNamesOut, dataIn, dataOut)
 %% input
 %   netName, a netica network (dne, neta)

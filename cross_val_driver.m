@@ -80,6 +80,9 @@ savedStats = struct; % store results
         testcasename = allTestCases{ctcase,1}; % string
         NodeNamesIn = allTestCases{ctcase,2}; % cell
         NodeNamesOut = allTestCases{ctcase,3};
+        
+        compile_net(baseNetname,[cas_dat_root,'.cas'],voodooPar,baseNetname)
+
         [ALLpred,ALLDataIn, ALLDataOut, ALLbh] = runPredictBayesMNF(baseNetname, ...
             NodeNamesIn, NodeNamesOut, data, dataNames, ['ALL', testcasename]);
         close (ALLbh);
