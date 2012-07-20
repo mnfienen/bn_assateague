@@ -8,6 +8,13 @@ headerline = fgets(ifp);
 fprintf(ofp,'%s',['% ',headerline]);
 while ~feof(ifp)
     line = fgets(ifp);
-    fprintf(ofp,'%s',line);
+    tmp = strread(line,'%s','delimiter',' ');
+    for i = 1:length(tmp)
+        if tmp(i) == '*'
+            tmp(i) = NaN;
+        end
+        fprintf(ofp,'%s',tmp(i));
+    end
+    fprintf(ofp,'\n');
 end
 fclose('all')

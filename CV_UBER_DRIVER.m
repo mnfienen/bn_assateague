@@ -1,4 +1,4 @@
-nfolds = 2;
+nfolds = 8;
 ntestcases = 2;
 cas_dat_root = 'SEAWAT2NETICA_SLR_00';
 voodoopar = [1,1000];
