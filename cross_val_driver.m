@@ -30,9 +30,9 @@ function cross_val_driver(baseNetname,voodooPar,baseCASEfilename,nFolds)
 global NETICA_ENV NETICA_NET NETICA_NETNAME NETICA_NODESTRUCT NETICA_STREAMER NETICA_ALL_NODES
 
 %% set some paths for dependencies 
-addpath('C:\BN_ASSATEAGUE\bayesTools');
-addpath('C:\BN_ASSATEAGUE\interpTools');
-addpath('C:\BN_ASSATEAGUE\valTools');
+addpath('bayesTools');
+addpath('interpTools');
+addpath('valTools');
 
 
 %% generate the set of folds from indices corresponding to the length 
