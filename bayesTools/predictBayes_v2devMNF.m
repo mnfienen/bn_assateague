@@ -11,7 +11,7 @@ function pred = predictBayes_v2devMNF(netName, nodeNamesIn, nodeNamesOut, dataIn
 %% output
 %   pred, structure with fields
 %       .netName, the name of the net
-%       .pdf, another structure with one NxR entry per node
+%       .pdf, another structu re with one NxR entry per node
 %       .ranges, another structure with one Rx1 entry listing bins
 %       . lots of other stuff
 %
