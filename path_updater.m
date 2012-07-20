@@ -1,0 +1,5 @@
+addpath('bayesTools');
+addpath('interpTools');
+addpath('valTools');
+global NETICA_ENV NETICA_NET NETICA_NETNAME NETICA_NODESTRUCT NETICA_STREAMER NETICA_ALL_NODES
+global NETICA_CASEFILE_STREAMER NETICA_CS
