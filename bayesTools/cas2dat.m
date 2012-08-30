@@ -10,10 +10,10 @@ while ~feof(ifp)
     line = fgets(ifp);
     tmp = strread(line,'%s','delimiter',' ');
     for i = 1:length(tmp)
-        if tmp(i) == '*'
-            tmp(i) = NaN;
+        if tmp{i} == '*'
+            tmp{i} = NaN;
         end
-        fprintf(ofp,'%s',tmp(i));
+        fprintf(ofp,'%s ',tmp{i});
     end
     fprintf(ofp,'\n');
 end
