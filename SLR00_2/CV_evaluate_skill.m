@@ -25,12 +25,12 @@ cross_val_driver('SLR00_2.neta',voodoopar,[cas_dat_root,'.cas'],nfolds);
            for k = 1: numvars
                varnme = savedStats.valsavedStats(k).VARNAME;
                ofp = fopen([testcasenamecal, '_CV_summary_',calval{1},'_',varnme,'_voodoo_', num2str(voodoopar),'.dat'], 'w');
-               fprintf(ofp,'Cross Validation Summary for %s\n %s\nresponse variable:%s\nNfolds: %d\nvoodoopar: %d\n', ...
+               fprintf(ofp,'Cross Validation Summary for %s\n %s\nresponse variable: %s\nNfolds: %d\nvoodoopar: %d\n', ...
                    testcasenamecal,calval{1},varnme,nfolds,voodoopar);
                fprintf(ofp,'%-16s %-16s %-16s %-16s %-16s %-16s\n', 'fold','skM','skML','rmseM','rmseML','LR');
                fclose(ofp);
                ofp = fopen([testcasenameval, '_CV_summary_',calval{2},'_',varnme,'_voodoo_', num2str(voodoopar),'.dat'], 'w');
-               fprintf(ofp,'Cross Validation Summary for %s\n %s\nresponse variable:%s\nNfolds: %d\nvoodoopar: %d\n', ...
+               fprintf(ofp,'Cross Validation Summary for %s\n %s\nresponse variable: %s\nNfolds: %d\nvoodoopar: %d\n', ...
                    testcasenameval,calval{2},varnme,nfolds,voodoopar);
                fprintf(ofp,'%-16s %-16s %-16s %-16s %-16s %-16s\n', 'fold','skM','skML','rmseM','rmseML','LR');
                fclose(ofp);
@@ -39,11 +39,12 @@ cross_val_driver('SLR00_2.neta',voodoopar,[cas_dat_root,'.cas'],nfolds);
 
 %% now, populate each file with the output data
 for j = 1:ntestcases
-       for cv = 1:2
+      testcasenameval =  savedStats.valsavedStats(j).testcasename;
+      testcasenamecal =  savedStats.calsavedStats(j).testcasename;
+      for cv = 1:2
            for k = 1: numvars
                varnme = savedStats.valsavedStats(k).VARNAME;
-               testcasenameval =  savedStats.valsavedStats(j).testcasename;
-               testcasenamecal =  savedStats.calsavedStats(j).testcasename;
+
                indatafile = [cas_dat_root, ...
                   '_ct-',num2str(j), '_NO_CV.mat'];
                load(indatafile);
